@@ -1,8 +1,10 @@
 # EJERCICIO 1
 
+# **a)** 
+
 The assertion that machines could act as if they were intelligent is called the **weak AI** hypothesis by philosophers.
 
-The assertion that machines that do so are actually thinking (not just simulating thinking) is called the **strong AI** hypothesis.
+The assertion that machines are actually thinking (not just simulating thinking) is called the **strong AI** hypothesis.
 
 ## Weak AI
 
@@ -30,7 +32,7 @@ Turing himself examined a wide variety of **possible objections to the possibili
 
 2. **The mathematical objection**
 
-	Philosophers such as J. R. Lucas (1961) have claimed that this theorem shows that machines are mentally inferior to humans, because machines are formal systems that are limited by the incompleteness theorem—they cannot establish the truth of their own Gödel sentence—while humans have no such limitation.
+	Philosophers such as J. R. Lucas (1961) have claimed that machines are mentally inferior to humans, because machines are formal systems that are limited by the incompleteness theorem—they cannot establish the truth of their own Gödel sentence—while humans have no such limitation.
 
 	We will examine only three of the problems with the claim:
 
@@ -79,7 +81,7 @@ If physicalism is correct, it must be the case that the proper description of a 
 
 The simplicity of this view is challenged by some simple thought experiments. Take for example the **brain-in-a-vat** experiment. 
 
-This example seems to contradict the view that brain states determine mental states. One way to resolve the dilemma is to say that the content of mental states can be interpreted from two different points of view. The “**wide content**” view interprets the content of mental states involves both the brain the content of mental states involves both the brain. **Narrow content,** on the other hand, considers only the brain state.
+This example seems to contradict the view that brain states determine mental states. One way to resolve the dilemma is to say that the content of mental states can be interpreted from two different points of view. The “**wide content**” view interprets the content of mental states involves both the brain and the environment history. **Narrow content,** on the other hand, considers only the brain state.
 
 Wide content is the setting in which our ordinary language about mental content has evolved. On the other hand, with the question of whether AI systems are really thinking and really do have mental states narrow content is appropriate.
 
@@ -164,7 +166,12 @@ Yudkowsky (2008) goes into more detail about how to design a Friendly AI, the ch
 
 Omohundro (2008) says that “social structures which cause individuals to bear the cost of their negative externalities would go a long way toward ensuring a stable and positive future”.
 
+# b) ![[tp1-fundamentos-mind-map.png]]
 
+# EJERCICIO 2
+
+1. Según el texto, aunque los LLMs pueden imitar comportamientos humanos y simular características como creencias o intenciones, su naturaleza fundamentalmente diferente (son entidades computacionales desprovistas de cuerpo y experiencia) los aleja de lo que conocemos como consciencia. Se advierte sobre el peligro de caer en el antropomorfismo y  se considera que, por ahora, estos agentes deben verse como simulacros, no como seres conscientes.
+2. El texto no menciona explícitamente las implicaciones éticas de atribuir conciencia y derechos morales a los agentes de IA avanzados. Sin embargo, se sugiere que la atribución de estas características podría llevar a errores éticos, ya que se basaría en una falsa equivalencia entre la simulación de conciencia y la conciencia real. Esto podría desviar la atención de las verdaderas preocupaciones éticas relacionadas con el uso y desarrollo de la IA, como la justicia, la transparencia y la responsabilidad humana en la creación y el manejo de estas tecnologías.
 # EJERCICIO 3
 
 A lo largo de la de la historia de la humanidad siempre han existido diversos momentos en los cuales la tecnología parece dar un salto abrupto en cuanto a complejidad que abre el abanico a resolver una cantidad de problemas que hasta el momento parecían muy difíciles o imposibles de resolver. Y con la aparición de esas tecnologías, también el levantamiento de voces en contra de su evolución. Sucedió con la revolución industrial, la computadora, internet, etc., y la aparición de los LLMs no resulta una excepción a ese patrón. 
