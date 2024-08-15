@@ -166,7 +166,7 @@ Yudkowsky (2008) goes into more detail about how to design a Friendly AI, the ch
 
 Omohundro (2008) says that “social structures which cause individuals to bear the cost of their negative externalities would go a long way toward ensuring a stable and positive future”.
 
-# b) ![[tp1-fundamentos-mind-map.png]]
+# b) ![AI Mind Map](/tp1-fundamentos/tp1-fundamentos-mind-map.png)
 
 # EJERCICIO 2
 
