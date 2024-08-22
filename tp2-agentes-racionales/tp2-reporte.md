@@ -34,26 +34,26 @@ Para una combinación determinada de los parámetros descriptos (por ejemplo, ta
 
 A continuación se presentan los resultados obtenidos expresados en forma gráfica, en donde los primeros cuatro gráficos (uno para cada tasa de suciedad) dan nota de la clara diferencia de rendimiento entre el agente reflexivo simple y el agente completamente aleatorio, siendo la de éste último la que peor se desempeña a medida que aumenta el tamaño de la cuadrícula. A fin de mejorar la legibilidad de los datos, se optó por tomar el promedio de la medida de rendimiento de las 10 ejecuciones del agente para cada tamaño de cuadrícula:
 
-![](comparación_metodos_tasa_0.1.png)
+![](./images/comparación_metodos_tasa_0.1.png)
 
-![](comparación_metodos_tasa_0.2%201.png)
+![](./images/comparación_metodos_tasa_0.2.png)
 
-![](comparación_metodos_tasa_0.4.png)
+![](./images/comparación_metodos_tasa_0.4.png)
 
-![](comparación_metodos_tasa_0.8.png)
+![](./images/comparación_metodos_tasa_0.8.png)
 
 Los siguientes cuatro gráficos, por otro lado, representan el gráfico de cajas y extensiones para la totalidad de los 10 datos recolectados para cada agente y cada tamaño de entorno, permitiendo comparar el nivel de variabilidad en el rendimiento de los distintos tipos de agentes:
 
-![](comparación_boxplot_tasa_0.1.png)
+![](./images/comparación_boxplot_tasa_0.1.png)
 
-![](comparación_boxplot_tasa_0.2.png)
+![](./images/comparación_boxplot_tasa_0.2.png)
 
-![](comparación_boxplot_tasa_0.4.png)
+![](./images/comparación_boxplot_tasa_0.4.png)
 
-![](comparación_boxplot_tasa_0.8.png)
+![](./images/comparación_boxplot_tasa_0.8.png)
 
 ### CONCLUSIÓN
 
-Si bien la diferencia en el rendimiento de cada tipo de agente (el reflexivo simple comparado con el totalmente aleatorio) es importante, no resulta algo sorprendente, ya que tiene sentido pensar que el agente realizará acciones "de más" al existir la posibilidad de que, para un momento dado, encontrándose en un casillero "sucio", el agente pueda tomar la decisión de no limpiar dicho casillero y en su lugar moverse a otro. Esto se hace más aún evidente en las cuadrículas de mayor tamaño, donde para una misma cantidad de acciones a realizar (en todos los casos los agentes ejecutan 1000 acciones) y al ser mucho mayor la cantidad de posibles cuadrículas "sucias", se acentúa la diferencia en la medida de rendimiento, como puede observarse correctamente en los gráficos resultantes.
+Si bien la diferencia en el rendimiento de cada tipo de agente (el reflexivo simple comparado con el totalmente aleatorio) es importante, no resulta algo sorprendente, ya que tiene sentido pensar que el agente realizará acciones "de más" al existir la posibilidad de que, para un momento dado, encontrándose en un casillero "sucio", el agente pueda tomar la decisión de no limpiar dicho casillero y en su lugar moverse a otro. Esto se hace más aún evidente en las cuadrículas de mayor tamaño, donde para una misma cantidad de acciones a realizar (en todos los casos los agentes ejecutan 1000 acciones) y al ser mucho mayor la cantidad de posibles cuadrículas "sucias", se acentúa la diferencia en la medida de rendimiento, como puede observarse correctamente en los gráficos presentados.
 
 Resulta curioso resaltar además que, dado que la cantidad de acciones que pueden realizar los agentes tiene un tope superior de 1000 acciones, a partir de un cierto tamaño de cuadrícula el rendimiento comienza a decrecer. Esto puede observarse en el gráfico de líneas para la tasa de suciedad con valor 0.8.
