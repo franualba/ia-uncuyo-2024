@@ -1,4 +1,5 @@
 import random
+import copy
 
 # Ejercicio 2
 
@@ -31,8 +32,8 @@ class Environment:
         return self.grid[self.posY][self.posX]
 
     def get_performance(self):
-        return round(self.performance/(self.sizeX*self.sizeY)*100,1)
-        # return round((self.performance/self.actions)*1000,1)
+        # return round(self.performance/(self.sizeX*self.sizeY)*100,1)
+        return self.performance
 
     def print_environment(self):
         for y in range(self.sizeY):
@@ -73,147 +74,176 @@ class Agent:
     
     def think(self):
         perception = self.perspective(self.env)       
-        # if perception["is_dirty"]:
-        #     return self.suck()        
-        # action = random.choice([self.up, self.down, self.left, self.right])
+        if perception["is_dirty"]:
+            return self.suck()        
+        action = random.choice([self.up, self.down, self.left, self.right])
+        return action()
+            
+    def thinkRandom(self):
         action = random.choice([self.up, self.down, self.left, self.right, self.suck])
         return action()
 
 if __name__ == "__main__":
-   for i in range(7):
-        size = 2**(i+1)
-        print(f"\nEntorno de {size}x{size}")  
-        for dirt_rate in [0.1,0.2,0.4,0.8,1.0]:
-            print(f"\nRatio {dirt_rate}: ", end="")
-            for j in range(10):
+    for dirt_rate in [0.1,0.2,0.4,0.8]:  
+        for i in range(7):
+            size = 2**(i+1)
+            print(f"\nEntorno de {size}x{size}")
+            list_reflexivo = []
+            list_random = []
+            for _ in range(10):
                 posX = random.randint(0, size-1)
                 posY = random.randint(0, size-1)
                 env = Environment(size, size, posX, posY, dirt_rate)
-                agent = Agent(env)
+                env1 = copy.deepcopy(env)
+                env2 = copy.deepcopy(env)
+                agent1 = Agent(env1)
+                agent2 = Agent(env2)
                 for _ in range(1000):
-                    agent.think()
-                print(env.get_performance(), end=" ")
-                #print(f"{env.get_performance()} ({env.performance}, {env.actions})", end=" ")
-                if dirt_rate == 1.0 and j == 9: print()
+                    agent1.think()
+                    agent2.thinkRandom()
+                list_reflexivo.append(env1.get_performance())
+                list_random.append(env2.get_performance())               
+            print(f"\nRatio {dirt_rate} reflexivo simple: {list_reflexivo}", end="")
+            print(f"\nRatio {dirt_rate} aleatorio: {list_random}")
+                
 '''
-Resultados Ejercicio 4
-
 Entorno de 2x2
 
-Ratio 0.1: 0.0 0.0 0.0 25.0 0.0 0.0 0.0 25.0 0.0 0.0 
-Ratio 0.2: 25.0 50.0 25.0 0.0 0.0 25.0 50.0 50.0 75.0 0.0 
-Ratio 0.4: 50.0 25.0 25.0 25.0 50.0 75.0 75.0 25.0 25.0 0.0 
-Ratio 0.8: 50.0 75.0 100.0 50.0 100.0 50.0 100.0 100.0 50.0 75.0 
-Ratio 1.0: 100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 
+Ratio 0.1 reflexivo simple: [1, 1, 0, 1, 0, 0, 0, 0, 0, 1]
+Ratio 0.1 aleatorio: [1, 1, 0, 1, 0, 0, 0, 0, 0, 1]
 
 Entorno de 4x4
 
-Ratio 0.1: 0.0 6.2 6.2 12.5 18.8 6.2 0.0 0.0 12.5 0.0 
-Ratio 0.2: 25.0 18.8 25.0 31.2 12.5 31.2 0.0 18.8 6.2 25.0 
-Ratio 0.4: 43.8 31.2 37.5 31.2 62.5 43.8 43.8 50.0 50.0 43.8 
-Ratio 0.8: 81.2 87.5 87.5 87.5 62.5 68.8 87.5 87.5 81.2 75.0 
-Ratio 1.0: 100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 
+Ratio 0.1 reflexivo simple: [1, 1, 0, 4, 1, 1, 1, 2, 1, 1]
+Ratio 0.1 aleatorio: [1, 1, 0, 4, 1, 1, 1, 2, 1, 1]
 
 Entorno de 8x8
 
-Ratio 0.1: 17.2 12.5 9.4 9.4 10.9 9.4 12.5 12.5 9.4 6.2 
-Ratio 0.2: 14.1 20.3 20.3 20.3 21.9 20.3 14.1 25.0 17.2 21.9
-Ratio 0.4: 45.3 34.4 48.4 37.5 40.6 34.4 39.1 37.5 45.3 32.8 
-Ratio 0.8: 81.2 70.3 78.1 87.5 71.9 78.1 84.4 82.8 84.4 78.1 
-Ratio 1.0: 96.9 100.0 98.4 100.0 100.0 98.4 98.4 100.0 98.4 100.0
+Ratio 0.1 reflexivo simple: [12, 5, 4, 7, 8, 6, 11, 4, 7, 5]
+Ratio 0.1 aleatorio: [10, 5, 4, 6, 4, 4, 9, 3, 7, 5]
 
 Entorno de 16x16
 
-Ratio 0.1: 3.1 7.0 9.0 3.5 5.5 5.9 6.6 8.2 10.9 4.3 
-Ratio 0.2: 18.4 7.4 12.9 15.6 15.2 18.4 14.1 14.5 15.2 12.5 
-Ratio 0.4: 29.3 30.1 26.2 29.7 26.2 35.2 29.3 25.8 25.0 20.3 
-Ratio 0.8: 54.7 63.3 57.0 44.1 36.7 50.4 57.0 40.6 63.7 56.6
-Ratio 1.0: 78.5 65.2 71.1 71.9 85.5 62.9 72.3 55.9 43.4 78.1 
+Ratio 0.1 reflexivo simple: [10, 20, 17, 17, 20, 19, 23, 20, 16, 21]
+Ratio 0.1 aleatorio: [6, 9, 7, 9, 12, 16, 13, 5, 8, 11]
 
 Entorno de 32x32
 
-Ratio 0.1: 1.6 2.8 4.0 2.8 2.3 2.1 2.5 2.7 3.6 3.0 
-Ratio 0.2: 3.9 5.7 4.6 5.8 6.0 4.1 3.4 6.2 5.2 3.5 
-Ratio 0.4: 10.1 10.2 8.9 10.2 7.0 10.6 9.3 10.2 10.4 9.5
-Ratio 0.8: 18.4 18.3 15.6 15.8 17.5 17.1 20.0 18.8 18.6 20.7 
-Ratio 1.0: 24.3 19.3 23.7 21.9 19.9 25.3 23.5 20.8 19.8 26.7 
+Ratio 0.1 reflexivo simple: [19, 23, 32, 30, 28, 26, 31, 20, 29, 37]
+Ratio 0.1 aleatorio: [7, 12, 8, 11, 6, 11, 10, 14, 9, 10]
 
 Entorno de 64x64
 
-Ratio 0.1: 1.0 0.4 0.6 0.8 0.7 0.6 0.8 0.9 0.7 0.6 
-Ratio 0.2: 1.8 1.5 1.3 1.4 1.5 1.6 1.3 1.6 1.4 2.1
-Ratio 0.4: 1.2 2.3 3.3 3.3 2.9 2.5 2.2 2.0 3.8 2.3 
-Ratio 0.8: 6.0 4.1 3.7 5.8 4.2 5.6 5.2 5.6 5.4 5.6 
-Ratio 1.0: 4.9 7.3 7.3 6.6 6.8 6.6 5.2 6.6 6.8 6.6 
+Ratio 0.1 reflexivo simple: [17, 22, 42, 32, 31, 22, 37, 39, 30, 24]
+Ratio 0.1 aleatorio: [11, 7, 11, 11, 17, 18, 12, 11, 11, 8]
 
 Entorno de 128x128
 
-Ratio 0.1: 0.2 0.1 0.2 0.2 0.3 0.3 0.3 0.2 0.3 0.3 
-Ratio 0.2: 0.4 0.4 0.3 0.4 0.4 0.5 0.2 0.4 0.4 0.4 
-Ratio 0.4: 0.7 0.8 0.9 1.0 0.6 0.7 0.6 1.0 0.6 0.8 
-Ratio 0.8: 1.2 1.2 1.4 1.3 1.2 1.0 0.9 1.2 1.5 1.3 
-Ratio 1.0: 1.4 1.3 1.3 1.8 1.6 1.7 1.6 1.5 1.7 1.1
-
-'''
-
-'''
-Resultados Ejercicio 5
+Ratio 0.1 reflexivo simple: [34, 27, 38, 26, 29, 45, 26, 19, 23, 29]
+Ratio 0.1 aleatorio: [10, 15, 11, 14, 13, 6, 10, 23, 6, 14]
 
 Entorno de 2x2
 
-Ratio 0.1: 50.0 0.0 0.0 0.0 0.0 0.0 25.0 0.0 0.0 0.0 
-Ratio 0.2: 0.0 50.0 50.0 50.0 25.0 50.0 0.0 0.0 0.0 25.0 
-Ratio 0.4: 25.0 75.0 75.0 25.0 50.0 50.0 25.0 50.0 50.0 25.0 
-Ratio 0.8: 50.0 75.0 75.0 100.0 100.0 100.0 75.0 50.0 100.0 100.0 
-Ratio 1.0: 100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 
+Ratio 0.2 reflexivo simple: [0, 1, 0, 0, 0, 1, 0, 2, 1, 0]
+Ratio 0.2 aleatorio: [0, 1, 0, 0, 0, 1, 0, 2, 1, 0]
 
 Entorno de 4x4
 
-Ratio 0.1: 12.5 6.2 12.5 12.5 18.8 12.5 12.5 6.2 12.5 6.2 
-Ratio 0.2: 12.5 6.2 12.5 25.0 25.0 12.5 18.8 18.8 18.8 18.8 
-Ratio 0.4: 56.2 37.5 25.0 43.8 25.0 43.8 43.8 62.5 12.5 43.8 
-Ratio 0.8: 75.0 75.0 75.0 68.8 87.5 75.0 62.5 87.5 93.8 87.5 
-Ratio 1.0: 100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0 
+Ratio 0.2 reflexivo simple: [3, 5, 4, 2, 5, 5, 2, 4, 3, 4]
+Ratio 0.2 aleatorio: [3, 5, 4, 2, 5, 5, 2, 4, 3, 4]
 
 Entorno de 8x8
 
-Ratio 0.1: 6.2 14.1 14.1 4.7 17.2 9.4 10.9 15.6 10.9 6.2 
-Ratio 0.2: 14.1 20.3 6.2 14.1 9.4 21.9 15.6 21.9 21.9 17.2 
-Ratio 0.4: 26.6 32.8 31.2 32.8 39.1 40.6 35.9 28.1 23.4 37.5
-Ratio 0.8: 73.4 68.8 70.3 67.2 65.6 67.2 71.9 73.4 64.1 62.5 
-Ratio 1.0: 84.4 87.5 89.1 78.1 85.9 81.2 93.8 75.0 84.4 78.1 
+Ratio 0.2 reflexivo simple: [13, 16, 9, 8, 8, 21, 12, 14, 5, 9]
+Ratio 0.2 aleatorio: [13, 14, 9, 7, 6, 17, 10, 13, 4, 8]
 
 Entorno de 16x16
 
-Ratio 0.1: 1.6 3.9 3.1 5.1 3.5 4.7 3.1 1.6 5.5 5.9
-Ratio 0.2: 9.8 9.0 12.9 8.2 9.8 9.0 7.8 7.0 7.4 9.4 
-Ratio 0.4: 15.6 16.0 14.5 9.8 14.5 16.4 18.8 10.2 14.8 15.6 
-Ratio 0.8: 27.3 30.5 23.4 30.5 31.6 31.6 32.0 26.6 24.6 32.4 
-Ratio 1.0: 35.9 28.9 43.0 34.4 37.9 38.3 37.5 29.3 38.7 35.9
+Ratio 0.2 reflexivo simple: [36, 33, 32, 40, 39, 25, 34, 26, 41, 36]
+Ratio 0.2 aleatorio: [19, 14, 27, 18, 18, 20, 26, 12, 21, 18]
 
 Entorno de 32x32
 
-Ratio 0.1: 0.8 1.0 1.4 0.7 0.4 0.6 0.9 0.9 1.1 0.8 
-Ratio 0.2: 1.7 1.3 2.2 2.5 1.6 2.0 2.0 2.2 2.0 2.3 
-Ratio 0.4: 5.1 4.8 4.2 3.8 4.1 3.7 4.2 4.8 4.2 3.5 
-Ratio 0.8: 8.3 8.8 7.7 7.6 8.0 8.8 10.1 8.5 7.4 8.5
-Ratio 1.0: 10.9 11.8 11.9 10.0 10.6 8.7 10.4 11.1 11.6 12.3 
+Ratio 0.2 reflexivo simple: [40, 54, 47, 37, 63, 54, 58, 44, 60, 50]
+Ratio 0.2 aleatorio: [21, 26, 14, 19, 22, 19, 18, 16, 22, 21]
 
 Entorno de 64x64
 
-Ratio 0.1: 0.3 0.3 0.2 0.1 0.3 0.4 0.5 0.1 0.4 0.2 
-Ratio 0.2: 0.6 0.5 0.6 0.5 0.6 0.4 0.7 0.5 0.8 0.5 
-Ratio 0.4: 1.0 1.0 1.2 1.2 1.0 0.9 1.1 1.1 1.5 1.1 
-Ratio 0.8: 2.2 2.5 2.2 2.4 2.1 2.1 2.6 2.2 2.4 2.2 
-Ratio 1.0: 2.9 3.0 3.0 3.0 3.1 2.8 2.8 2.9 2.9 2.8 
+Ratio 0.2 reflexivo simple: [59, 47, 43, 59, 61, 54, 73, 45, 68, 71]
+Ratio 0.2 aleatorio: [25, 25, 22, 23, 14, 20, 31, 23, 22, 26]
 
 Entorno de 128x128
 
-Ratio 0.1: 0.1 0.0 0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 
-Ratio 0.2: 0.1 0.2 0.1 0.1 0.1 0.1 0.1 0.1 0.2 0.2 
-Ratio 0.4: 0.3 0.3 0.3 0.3 0.3 0.2 0.3 0.3 0.4 0.3 
-Ratio 0.8: 0.7 0.7 0.6 0.6 0.5 0.5 0.7 0.7 0.5 0.6 
-Ratio 1.0: 0.7 0.8 0.8 0.9 0.6 0.6 0.8 0.8 0.7 0.7 
+Ratio 0.2 reflexivo simple: [69, 78, 68, 67, 70, 54, 71, 68, 88, 58]
+Ratio 0.2 aleatorio: [26, 14, 25, 16, 19, 24, 19, 24, 33, 29]
 
+Entorno de 2x2
+
+Ratio 0.4 reflexivo simple: [2, 2, 0, 4, 0, 1, 3, 2, 2, 1]
+Ratio 0.4 aleatorio: [2, 2, 0, 4, 0, 1, 3, 2, 2, 1]
+
+Entorno de 4x4
+
+Ratio 0.4 reflexivo simple: [8, 8, 8, 7, 8, 5, 6, 9, 5, 5]
+Ratio 0.4 aleatorio: [8, 8, 8, 7, 8, 5, 6, 9, 5, 5]
+
+Entorno de 8x8
+
+Ratio 0.4 reflexivo simple: [16, 25, 24, 29, 24, 17, 31, 24, 30, 26]
+Ratio 0.4 aleatorio: [11, 21, 19, 29, 19, 16, 21, 20, 26, 25]
+
+Entorno de 16x16
+
+Ratio 0.4 reflexivo simple: [61, 85, 65, 82, 63, 66, 71, 58, 83, 61]
+Ratio 0.4 aleatorio: [34, 29, 34, 41, 37, 35, 28, 31, 43, 24]
+
+Entorno de 32x32
+
+Ratio 0.4 reflexivo simple: [112, 123, 100, 74, 113, 123, 109, 120, 75, 103]
+Ratio 0.4 aleatorio: [45, 45, 39, 44, 59, 49, 53, 51, 43, 48]
+
+Entorno de 64x64
+
+Ratio 0.4 reflexivo simple: [114, 137, 84, 105, 98, 145, 120, 125, 155, 101]
+Ratio 0.4 aleatorio: [43, 46, 40, 55, 52, 44, 54, 42, 51, 47]
+
+Entorno de 128x128
+
+Ratio 0.4 reflexivo simple: [116, 136, 128, 135, 103, 113, 106, 127, 114, 125]
+Ratio 0.4 aleatorio: [63, 52, 51, 53, 39, 50, 51, 49, 52, 39]
+
+Entorno de 2x2
+
+Ratio 0.8 reflexivo simple: [2, 4, 3, 4, 4, 4, 3, 3, 2, 3]
+Ratio 0.8 aleatorio: [2, 4, 3, 4, 4, 4, 3, 3, 2, 3]
+
+Entorno de 4x4
+
+Ratio 0.8 reflexivo simple: [13, 13, 13, 10, 13, 12, 11, 12, 12, 12]
+Ratio 0.8 aleatorio: [13, 13, 13, 10, 13, 12, 11, 12, 12, 12]
+
+Entorno de 8x8
+
+Ratio 0.8 reflexivo simple: [51, 55, 52, 53, 51, 50, 46, 47, 51, 51]
+Ratio 0.8 aleatorio: [38, 48, 46, 47, 37, 44, 38, 40, 46, 46]
+
+Entorno de 16x16
+
+Ratio 0.8 reflexivo simple: [130, 143, 146, 177, 150, 117, 162, 117, 103, 119]
+Ratio 0.8 aleatorio: [84, 72, 77, 64, 76, 66, 74, 87, 70, 78]
+
+Entorno de 32x32
+
+Ratio 0.8 reflexivo simple: [145, 200, 213, 230, 230, 207, 206, 201, 256, 217]
+Ratio 0.8 aleatorio: [85, 93, 83, 87, 89, 57, 99, 85, 75, 93]
+
+Entorno de 64x64
+
+Ratio 0.8 reflexivo simple: [212, 184, 231, 219, 233, 264, 197, 265, 238, 244]
+Ratio 0.8 aleatorio: [98, 96, 98, 99, 78, 84, 89, 90, 106, 84]
+
+Entorno de 128x128
+
+Ratio 0.8 reflexivo simple: [250, 217, 226, 246, 219, 169, 184, 213, 214, 251]
+Ratio 0.8 aleatorio: [85, 91, 101, 100, 76, 85, 87, 98, 94, 89]
 '''
-
