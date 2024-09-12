@@ -107,14 +107,17 @@ En las siguientes 3 imágenes es posible observar los resultados obtenidos para 
 
 ![](./images/figura1.png)
 <p align="center">Figura 1</p>
+
 En la figura superior, se representa el número total de estados explorados. Es posible observar que los algoritmos BFS y UCS1 presentan resultados idénticos, así como que los algoritmos DFSL y Random prácticamente no exploran estados.
 
 ![](./images/figura2.png)
 <p align="center">Figura 2</p>
+
 La Figura 2 permite observar el costo total de los caminos obtenidos por cada algoritmo, que llegan correctamente al objetivo. Notamos acá que para los algoritmos BFS, UCS1 y A* la distribución de los costos es la misma, que el algoritmo DFSL prácticamente no tiene valores debido a la limitación de profundidad establecida, y que el algoritmo Random obtiene los peores resultados de costo por mucha diferencia.
 
 ![](./images/figura3.png)
 <p align="center">Figura 3</p>
+
 La Figura 3 indica el tiempo total empleado por las distintas iteraciones al intentar encontrar un objetivo. Ignorando el algoritmo de búsqueda en profundidad limitada (ya que siempre obtendrá un tiempo menor al resto por estar limitado su recorrido), es posible destacar el rendimiento del algoritmo A*, cuyos peores casos se mentienen por debajo de los 0.05s. El peor caso, por otro lado, es obtenido por el algoritmo DFS con una demora máxima de poco más de 0.5s, es decir, más de 10 veces el mayor tiempo de ejecución correspondiente al algoritmo A*.
 
 ### **CONCLUSIÓN**
