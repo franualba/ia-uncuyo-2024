@@ -8,7 +8,7 @@ import heapq
 import gymnasium as gym
 import json
 
-def generate_random_map_custom(size=8, p=0.8, max_steps=None):
+def generate_random_map_custom(size=8, p=0.8):
     """
     Generates a random valid map (one that has a path from start to goal)
     :param size: size of each side of the grid
@@ -36,13 +36,15 @@ def generate_random_map_custom(size=8, p=0.8, max_steps=None):
     
     # Convert the map to a list of strings
     desc = ["".join(row) for row in m]
+
+    env = gym.make('FrozenLake-v1', desc=desc, is_slippery=False, render_mode='ansi')
     
     # Create a new environment
-    env = gym.make("FrozenLake-v1", desc=desc, is_slippery=False, render_mode='ansi')
+    # env = gym.make("FrozenLake-v1", render_mode='ansi')
     
     # Set the maximum number of steps
-    if max_steps is not None:
-        env.spec.max_episode_steps = max_steps
+    # if max_steps is not None:
+    #     env.spec.max_episode_steps = max_steps
     
     return env
 
@@ -76,10 +78,10 @@ def bfs(env, start, goal, max_steps):
     while not queue.empty():
         (state, path) = queue.get()
         
-        if state == goal:
+        if state == goal and len(path) < max_steps:
             return path, len(visited)
         
-        if state not in visited and len(visited) < max_steps:
+        if state not in visited:
             visited.add(state)
             
             for action in range(4):  # 0: LEFT, 1: DOWN, 2: RIGHT, 3: UP
@@ -96,10 +98,10 @@ def dfs(env, start, goal, depth_limit=None, max_steps=None):
     while stack:
         (state, path) = stack.pop()
         
-        if state == goal:
+        if state == goal and len(path) < max_steps:
             return path, len(visited)
         
-        if state not in visited and (depth_limit is None or len(path) < depth_limit) and len(visited) < max_steps:
+        if state not in visited and (depth_limit is None or len(path) < depth_limit):
             visited.add(state)
             
             for action in range(4):  # 0: LEFT, 1: DOWN, 2: RIGHT, 3: UP
@@ -117,10 +119,10 @@ def ucs(env, start, goal, cost_func, max_steps):
     while not pq.empty():
         (cost, state, path) = pq.get()
         
-        if state == goal:
+        if state == goal and len(path) < max_steps:
             return path, len(visited)
         
-        if state not in visited and len(visited) < max_steps:
+        if state not in visited:
             visited.add(state)
             
             for action in range(4):  # 0: LEFT, 1: DOWN, 2: RIGHT, 3: UP
@@ -171,10 +173,10 @@ def astar_search(env, start, goal, max_steps):
     visited = set()
     g_scores = {start: 0}
     
-    while frontier and len(visited) < max_steps:
+    while frontier:
         _, current, path = heapq.heappop(frontier)
         
-        if current == goal:
+        if current == goal and len(path) < max_steps:
             return path, len(visited)
         
         if current in visited:
@@ -222,7 +224,7 @@ def run_search_algorithm(env, algorithm, start, goal, cost_func=None, depth_limi
     
     return path, explored, cost, end_time - start_time
 
-def run_experiments(num_trials=30, grid_size=100, p_frozen=0.92, max_steps=10000):
+def run_experiments(num_trials=30, grid_size=100, p_frozen=0.92, max_steps=1000):
     np.random.seed(42)
     
     algorithms = ['BFS', 'DFS', 'DFSL', 'UCS1', 'UCS2', 'Random', 'A*']
@@ -231,7 +233,7 @@ def run_experiments(num_trials=30, grid_size=100, p_frozen=0.92, max_steps=10000
     csv_data = []
 
     for env_n in tqdm(range(num_trials)):
-        env = generate_random_map_custom(size=grid_size, p=p_frozen, max_steps=max_steps)
+        env = generate_random_map_custom(size=grid_size, p=p_frozen)
         start, _ = env.reset()
 
         for alg in algorithms:    
@@ -253,7 +255,7 @@ def run_experiments(num_trials=30, grid_size=100, p_frozen=0.92, max_steps=10000
                 path, explored, cost, time_taken = run_search_algorithm(env, 'Random', start, goal, max_steps=max_steps)
             elif alg == 'A*':
                 path, explored, cost, time_taken = run_search_algorithm(env, 'A*', start, goal, max_steps=max_steps)
-                            
+                
             solution_found = path is not None
             results[alg]['explored'].append(explored)
             results[alg]['cost'].append(cost)
@@ -292,6 +294,7 @@ def visualize_path(env, start, path, delay=0.5):
 
     for action in path:
         _, _, terminated, truncated, _ = env.step(action)
+
         env.render()
         time.sleep(delay)
         if terminated or truncated:
@@ -302,15 +305,30 @@ def visualize_path(env, start, path, delay=0.5):
 def plot_results(results):
     fig, axes = plt.subplots(1, 3, figsize=(18, 6))
     
-    for i, metric in enumerate(['explored', 'cost', 'time']):
-        data = [results[alg][metric] for alg in results]
-        axes[i].boxplot(data, tick_labels=list(results.keys()))
-        axes[i].set_title("")
-    axes[0].set_ylabel('Number of states explored')
-    axes[1].set_ylabel('Total cost of path to goal')
-    axes[2].set_ylabel('Time taken to find goal (in seconds)')
-    # print(data)
-    # print(axes)
+    metrics = ['explored', 'cost', 'time']
+    titles = ['Explored States', 'Cost', 'Time']
+    ylabels = ['Count', 'Value', 'Seconds']
+    
+    for i, metric in enumerate(metrics):
+        filtered_data = []
+        labels = []
+        
+        for alg in results:
+            # Filter out data points where no solution was found
+            valid_data = [results[alg][metric][j] for j in range(len(results[alg][metric])) 
+                          if results[alg]['cost'][j] != float('inf')]
+            
+            if valid_data:  # Only add to plot if there's valid data
+                filtered_data.append(valid_data)
+                labels.append(alg)
+        
+        if filtered_data:  # Only create plot if there's data to plot
+            axes[i].boxplot(filtered_data, tick_labels=labels)
+            axes[i].set_title(titles[i])
+            axes[i].set_ylabel(ylabels[i])
+            axes[i].set_xticklabels(labels)
+        else:
+            axes[i].text(0.5, 0.5, 'No valid data', ha='center', va='center')
     
     plt.tight_layout()
     plt.show()
@@ -327,7 +345,10 @@ results = run_experiments()
 # Plot results
 plot_results(results)
 
-# env = generate_random_map_custom(size=10, p=0.92, max_steps=100)
+# desc = generate_random_map_custom(size=10, p=0.92)
+# env = gym.make('FrozenLake-v1', desc=desc, is_slippery=False, render_mode='ansi').env
+# env = wrappers.TimeLimit(env, 100)
+    
 # start, _ = env.reset()
 # print(f"Start: {start}")
         
@@ -335,11 +356,11 @@ plot_results(results)
 # goal = np.where(desc == b'G')[0][0]
 # print(f"Goal: {goal}")
 
-# path, explored, cost, time_taken = run_search_algorithm(env, 'A*', start, goal, max_steps=1000)
+# path, explored, cost, time_taken = run_search_algorithm(env, 'DFS', start, goal, max_steps=10)
 # print(f"Path: {path}")
 # print(f"Total states explored: {explored}")
 # print(f"Total cost: {cost}")
 # print(f"Time taken: {time_taken}")
 
-# visualize_path(env, start, path, 0.2)
+#visualize_path(env, start, path, 0.2)
 

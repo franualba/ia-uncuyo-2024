@@ -64,7 +64,7 @@ Donde c(n, a, n') es el costo de la acción a.
 
 La consistencia implica admisibilidad y garantiza que A* nunca necesitará reabrir nodos cerrados, lo que mejora su eficiencia.
 
-### Desigualdad triangular
+#### Desigualdad triangular
 
 El concepto de consistencia está estrechamente relacionado con la desigualdad triangular en matemáticas. La desigualdad triangular establece que la suma de las longitudes de dos lados de un triángulo siempre debe ser mayor o igual que la longitud del tercer lado.
 
@@ -107,32 +107,18 @@ En las siguientes 3 imágenes es posible observar los resultados obtenidos para 
 
 ![](./images/figura1.png)
 <p align="center">Figura 1</p>
-En la figura superior, se representa el número total de estados explorados. Es posible observar que, al estar la cantidad máxima de pasos limitada a 1000, resulta ser muy reducida la cantidad total de pasos que se encuentran dentro del rango establecido, siendo el algoritmo A* el que más estados explora dentro del límite de pasos establecido.
+En la figura superior, se representa el número total de estados explorados. Es posible observar que los algoritmos BFS y UCS1 presentan resultados idénticos, así como que los algoritmos DFSL y Random prácticamente no exploran estados.
 
 ![](./images/figura2.png)
 <p align="center">Figura 2</p>
-Confirmando los resultados observados en la Figura 1, la Figura 2 muestra que únicamente el algoritmo A* encuentra objetivos dentro del rango de los 1000 pasos máximos, en indica el rango de variación del costo de los caminos encontrados. El resto de los algoritmos, al no haber encontrado el objetivo, no muestran información alguna relativa al costo.
+La Figura 2 permite observar el costo total de los caminos obtenidos por cada algoritmo, que llegan correctamente al objetivo. Notamos acá que para los algoritmos BFS, UCS1 y A* la distribución de los costos es la misma, que el algoritmo DFSL prácticamente no tiene valores debido a la limitación de profundidad establecida, y que el algoritmo Random obtiene los peores resultados de costo por mucha diferencia.
 
 ![](./images/figura3.png)
 <p align="center">Figura 3</p>
-La Figura 3 indica el tiempo total empleado por las distintas iteraciones al intentar encontrar un objetivo. Ignorando el algoritmo de búsqueda en profundidad limitada (ya que siempre obtendrá un tiempo menor al resto por estar limitado su recorrido), es posible destacar el rendimiento del algoritmo A*, cuyos peores casos se mentienen por debajo de los 0.01s.
-
-Las siguientes 3 figuras se obtuvieron al extender a 10000 la cantidad máxima de pasos que un agente puede realizar, con el objetivo de permitir que algoritmos presumiblemente "menos eficientes" alcancen el objetivo una mayor cantidad de veces. 
-
-![](./images/figura4.png)
-<p align="center">Figura 4</p>
-Los resultados ilustrados en la Figura 4 indican una clara superioridad del algoritmo A* frente al resto, al encontrar los objetivos correspondientes sin necesidad de explorar un tamaño grande de estados, como también se había resaltado al analizar los resultados de la Figura 1 anteriormente. El algoritmo de búsqueda en profundidad limitada (DFSL), como su nombre lo indica, tiene definido un valor máximo de profundidad que lo hace parecer "muy rápido" en esta comparación, pero debe mantenerse siempre presente el verdadero motivo detrás de este resultado (la limitación de profundidad).
-
-![](./images/figura5.png)
-<p align="center">Figura 5</p>
-En la Figura 5 volvemos a ver representado el rango de variación en el costo total del camino para cada iteración, donde esta vez todos los algoritmos, a excepción del DFSL y el Random, encuentran algún objetivo. Observamos que los algoritmos BFS, UCS1 y A* obtienen resultados idénticos, mientras que el algoritmo DFS obtiene el peor de los resultados con mucha diferencia, siendo también lo esperado.
-
-![](./images/figura6.png)
-<p align="center">Figura 6</p>
-La última figura (Figura 6), permite visualizar el rango de variación del tiempo empleado por cada algoritmo para encontrar un objetivo, en cada iteración. Nuevamente, podemos destacar el rendimiento del algoritmo A* y observar la notable diferencia que presenta con el algoritmo DFS, en este caso el de peor resultado entre todos.
+La Figura 3 indica el tiempo total empleado por las distintas iteraciones al intentar encontrar un objetivo. Ignorando el algoritmo de búsqueda en profundidad limitada (ya que siempre obtendrá un tiempo menor al resto por estar limitado su recorrido), es posible destacar el rendimiento del algoritmo A*, cuyos peores casos se mentienen por debajo de los 0.05s. El peor caso, por otro lado, es obtenido por el algoritmo DFS con una demora máxima de poco más de 0.5s, es decir, más de 10 veces el mayor tiempo de ejecución correspondiente al algoritmo A*.
 
 ### **CONCLUSIÓN**
 
-Basándome en los datos analizados en los apartados anteriores, considero que el algoritmo de búsqueda informada A* resulta ser el más adecuado para resolver el problema, ya que, además de ser el único capaz de llegar al objetivo en menos de 1000 pasos, es también aquel que lo logra en el menor tiempo posible. 
+Basándome en los datos analizados en los apartados anteriores, considero que el algoritmo de búsqueda informada A* resulta ser el más adecuado para resolver el problema, ya que, además de requerir la menor cantidad de estados visitados para llegar a un objetivo, es también aquel que logra encontrarlos en el menor tiempo posible. 
 
-Por otro lado, los gráficos representados dan cuenta del mal rendimiento del algoritmo DFS, por lo cual remarca que la necesidad de recurrir a este algoritmo debe basarse estrictamente en término de optimizar el espacio en memoria utilizado y no el tiempo. 
+Por otro lado, los gráficos representados dan cuenta del mal rendimiento del algoritmo DFS, lo cual permite confirmar que la necesidad de recurrir a este algoritmo debe basarse estrictamente en una necesidad de optimizar el espacio en memoria utilizado y no el tiempo. 
