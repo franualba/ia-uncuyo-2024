@@ -1,0 +1,56 @@
+library(dplyr)
+library(ggplot2)
+
+```{r}
+# Read the CSV file
+data <- read.csv("./arbolado-mza-dataset.csv")
+
+# Set a seed for reproducibility
+set.seed(123)
+
+# Create an index for the 20% validation set
+validation_index <- sample(1:nrow(data), size = 0.2 * nrow(data))
+
+# Split the data
+validation_data <- data[validation_index, ]
+training_data <- data[-validation_index, ]
+
+# Write the split datasets to new CSV files
+write.csv(validation_data, "arbolado-mendoza-dataset-validation.csv", row.names = FALSE)
+write.csv(training_data, "arbolado-mendoza-dataset-train.csv", row.names = FALSE)
+```
+
+
+```{r}
+
+data_train <- read.csv("./arbolado-mendoza-dataset-train.csv")
+data_train <- data_train %>% mutate(inclinacion_peligrosa=ifelse(inclinacion_peligrosa=='1','si','no'))
+data_train$inclinacion_peligrosa <- as.factor(data_train$inclinacion_peligrosa)
+data_train
+
+```
+
+```{r}
+data_train %>%  group_by(inclinacion_peligrosa) %>% summarise(total=n())
+
+```
+
+```{r}
+library(ggplot2)
+
+data_train_seccion_inclinacion <- data_train %>% group_by(seccion,inclinacion_peligrosa) %>% summarise(total=n())
+data_train_seccion_inclinacion
+
+ggplot(data_train) + geom_bar(aes(x=as.factor(inclinacion_peligrosa),fill=as.factor(inclinacion_peligrosa))) + theme_bw() + facet_wrap(~seccion)
+
+```
+
+```{r}
+data_train_especie_inclinacion <- data_train %>%  group_by(especie,inclinacion_peligrosa) %>% summarise(total=n())
+data_train_especie_inclinacion
+
+ggplot(data_train) + geom_bar(aes(x=as.factor(inclinacion_peligrosa),fill=as.factor(inclinacion_peligrosa))) + theme_bw() + facet_wrap(~especie)
+
+```
+
+

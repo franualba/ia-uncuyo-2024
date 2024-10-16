@@ -1,0 +1,132 @@
+---
+title: "HACKATON AM - Arbolado Publico - Exploracion inicial  del conjunto de datos"
+output: 
+  html_notebook: 
+    code_folding: none
+---
+
+```{r setup}
+suppressMessages(library(rpart))
+suppressMessages(library(caret))
+suppressMessages(library(readr))
+suppressMessages(library(dplyr))
+suppressMessages(library(ggplot2))
+suppressMessages(library(ggmap))
+```
+
+# Lectura de Archivos de datos
+
+-   [**arbolado-mza-dataset.csv**](https://www.dropbox.com/s/5a0u4h55qnvklhl/arbolado-mza-dataset.csv?dl=1) - conjunto de datos para entrenamiento
+-   [**arbolado-mza-dataset-test.csv**](https://www.dropbox.com/s/v6nmg1ny47kj9du/arbolado-mza-dataset-test.csv?dl=1) - conjunto de datos para evaluacion
+-   [**arbolado-mza-dataset-descripcion.csv**](https://www.dropbox.com/s/qvf0frk1ejpu476/arbolado-mza-dataset-descripcion.csv?dl=1) - InformaciÃ³n extra sobre los datos.
+
+## Leer archivos Entrenamiento y Testeo:
+
+Al usar la funcion *read_csv* del paquete **readr** tenemos la posibilidad de definir el tipo de dato que queremos para cada variable.
+
+```{r }
+data_train <- readr::read_csv("./arbolado-mza-dataset.csv",
+                              col_types = cols(
+  id = col_integer(),
+  especie = col_character(),
+  ultima_modificacion = col_character(),
+  altura = col_character(),
+  circ_tronco_cm = col_double(),
+  diametro_tronco = col_character(),
+  long = col_double(),
+  lat = col_double(),
+  seccion = col_integer(),
+  nombre_seccion = col_character(),
+  area_seccion = col_double(),
+  inclinacion_peligrosa = col_integer()
+))
+
+data_test <-  readr::read_csv("./arbolado-mza-dataset-test.csv",col_types = cols(
+  id = col_integer(),
+  especie = col_character(),
+  ultima_modificacion = col_character(),
+  altura = col_character(),
+  circ_tronco_cm = col_double(),
+  diametro_tronco = col_character(),
+  long = col_double(),
+  lat = col_double(),
+  seccion = col_integer(),
+  nombre_seccion = col_character(),
+  area_seccion = col_double()
+))
+
+```
+
+## Transformaciones:
+
+Algunos algoritmos no permiten nombres de factores como 1 y 0, se transforma la clase **inclinacion_peligrosa** a **si** y **no**
+
+En la tabla de abajo podemos ver el conjunto de datos tal cual quedo despues de esta pequeÃ±a transformacion.
+
+```{r echo=TRUE}
+data_train<-data_train %>% mutate(inclinacion_peligrosa=ifelse(inclinacion_peligrosa=='1','si','no'))
+data_train$inclinacion_peligrosa <-as.factor(data_train$inclinacion_peligrosa)
+data_train
+```
+
+# Explorando el conjunto de datos
+
+Antes de plantear cualquier algoritmo para intentar predecir el grado de inclinacion es fundamental analizar los datos. Del analisis de los datos pueden surgir diferentes hipotesis que nos permitan proponer soluciones al problema de estudio. Para esto nos valemos fundamentalmente de la visualizacion y de las herramientas para hacer concultas 'ala SQL' que provee el paquete **dplyr**
+
+##Algunas PREGUNTAS a responder:
+
+####1. Cual es la distribucion de las clase **inclinacion_peligrosa?**
+
+Para responder esta primer pregunta basta con contabilizar las ocurrencias de cada uno de los valores posibles de clase **inclinacion_peligrosa**. Usando dplyr, basta con agrupar por cada uno de los valores la clase via (via **group_by()**) y luego con **summarise()** contabilizar el total de cada grupo creado. La funcion especial **n()** permite contabilizar cada uno de los grupos formados.
+
+```{r echo=TRUE}
+data_train %>%  group_by(inclinacion_peligrosa) %>% summarise(total=n())
+```
+
+Observamos entonces, que para este conunto de datos, solo cerca del 12% de los registros tiene un inclinacion peligrosa.
+
+####2. Se puede considerar alguna secciÃ³n mas peligrosa que otra?
+
+Podriamos seguir preguntandonos, si existe alguna diferencia en esta distribucion respecto a las distintas secciones administrativas de la ciudad. Y para esto bastaria con modificar ligeramente la linea de arriba para incluir la variable **seccion** en la funcion *group_by()*.
+
+```{r echo=TRUE}
+data_train_seccion_inclinacion<-data_train %>%  group_by(seccion,inclinacion_peligrosa) %>% summarise(total=n())
+data_train_seccion_inclinacion
+```
+
+Ahora es posible ver que algunas secciones como ser la 1era seccion mantienen el la misma proporcion de arboles con inclinacion peligrosa. Por otro lado, secciones como la 4ta, tienen solamente cerca del 7%.
+
+A veces, es mas facil visualizarlo en un grafico. Para ello podemos usar muchas herramientas, pero en R, una de las populares es el ggplot.
+
+```{r, fig.height=8}
+ggplot(data_train)+
+  geom_bar(aes(x=as.factor(inclinacion_peligrosa),fill=as.factor(inclinacion_peligrosa)   ))+
+  theme_bw()+
+  facet_wrap(~seccion)
+```
+
+#### Que opinan? Existe alguna diferencia entre las secciones?
+
+### Se puede considerar alguna especie mas peligrosa que otra?
+
+Repitamos el mismo razonamiento pero ahora con las especies..
+
+Podriamos preguntarnos, si existe alguna diferencia en esta distribucion respecto a las distintas especies existentes la ciudad. Y para esto bastaria con modificar la linea de dpylr para y reemplazar la variable **seccion** por la variable **especie** en la funcion *group_by()*.
+
+```{r, echo=TRUE}
+data_train_especie_inclinacion<-data_train %>%  group_by(especie,inclinacion_peligrosa) %>% summarise(total=n())
+data_train_especie_inclinacion
+```
+
+Aqui sin duda resulta muy dificil observar alguna diferencia. Veamos que pasa con una visualizacion como la anterior pero aplicada a **especie**
+
+```{r, fig.height=8}
+ggplot(data_train)+
+  geom_bar(aes(x=as.factor(inclinacion_peligrosa),fill=as.factor(inclinacion_peligrosa)   ))+
+  theme_bw()+
+  facet_wrap(~especie)# Aca estamos indicando que queremos que diferencie por especie
+```
+
+#### Que conclusion podemos sacar del grafico? Existe alguna especie que sea mas propensa presentar una inclinacion peligrosa.?
+
+
