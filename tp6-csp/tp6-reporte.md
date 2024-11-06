@@ -119,3 +119,16 @@ a)
 		
 b) Lo demostrado en el inciso a es suficiente debido a que la 2-consistencia garantiza que siempre habrá un valor consistente disponible para cada variable. Luego al asignar valores desde las hojas hacia la raíz, por ejemplo, cada nueva asignación solo necesita ser consistente con su padre en el árbol.
 
+## EJERCICIO 7
+
+La siguiente imagen corresponde al análisis de los tiempos de ejecución y del número de estados explorados para los algoritmos Backtracking (BT) y Forward Chaining (FC):
+
+![[times_and_states.png]]
+
+Y las siguientes dos figuras (tiempo y estados explorados, respectivamente) representan el mismo análisis pero para los algoritmos Hill Climbing, Simulated Annealing y Genético implementados en el trabajo práctico anterior:
+
+![[tp5_times.png]]
+
+![[tp5_states.png]]
+
+Del análisis de estas figuras, es posible observar que Forward Checking es el algoritmo que mejores resultados obtiene por un margen significativo, tanto en número de estados explorados como en tiempo de ejecución. El rendimiento de los algoritmos de Backtracking, Hill Climbing y Simulated Annealing resulta similar, con una ligera ventaja por parte del algoritmo de Backtracking. Y por último, el Algoritmo Genético se muestra como aquel con el peor desempeño de todos.  
