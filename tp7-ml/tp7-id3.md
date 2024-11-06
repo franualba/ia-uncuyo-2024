@@ -1,6 +1,6 @@
 ## A. Resultados evaluación dataset tennis.csv
 
-![[Pasted image 20241031235536.png]]
+![[decision_tree.png]]
 
 ## B. Estrategias para datos de tipo real
 
