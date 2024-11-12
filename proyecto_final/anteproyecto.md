@@ -83,7 +83,7 @@ Aplicar técnicas de inteligencia artificial, como algoritmos genéticos y redes
 9. Elaboración de la presentación [3 días]
 ### CRONOGRAMA ESTIMADO DE ACTIVIDADES
 
-![[gantt.png]]
+![](images/gantt.png)
 
 ### REFERENCIAS
 1. [Protocolo MIDI](https://en.wikipedia.org/wiki/MIDI)
