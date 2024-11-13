@@ -93,6 +93,7 @@ Papers:
 1. [Generation of music through genetic algorithms](https://www.cse.chalmers.se/~abela/supervision/kandidat2014/DATX02_14_11.pdf)
 2. [Music recombination using a genetic algorithm](https://scholarworks.indianapolis.iu.edu/bitstreams/fbab5c96-54f9-424b-b298-64bdc1037026/download)
 3. [Evolving computer-generated music by means of the normalized compression distance](https://repositorio.uam.es/bitstream/handle/10486/664697/evolving_alfonseca_WTISA_2005.pdf?sequence=1&isAllowed=y)
+4. [A simple genetic algorithm for music generation by means of algorithmic information theory](https://www.researchgate.net/profile/Manuel-Alfonseca/publication/221008730_A_simple_genetic_algorithm_for_music_generation_by_means_of_algorithmic_information_theory/links/02e7e521b9152b11e4000000/A-simple-genetic-algorithm-for-music-generation-by-means-of-algorithmic-information-theory.pdf)
 
 Libros:
 1. AIMA, Fourth Edition
