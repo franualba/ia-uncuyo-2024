@@ -2,7 +2,7 @@
 
 **CÓDIGO DEL PROYECTO**: MUTRAMI (Music Track Mixer)
 
-**INTEGRANTES**: Adrián Zangla y Francisco Alba
+**INTEGRANTE**: Francisco Alba
 ### DESCRIPCIÓN:
 El mundo de la música, concretamente de la composición musical, se presenta habitualmente complejo y desafiante en el mejor de los casos. En los últimos años, y con la idea de complementar o facilitar el proceso creativo que conlleva producir música, se han desarrollado múltiples enfoques que permiten crear composiciones musicales de forma artificial empleando técnicas de aprendizaje automático.
 Este proyecto tiene como objetivo explorar el funcionamiento de algunas de esas técnicas, y utilizarlas para lograr transferir características musicales específicas de una canción a otra. Buscamos así componer una nueva canción que mezcle ciertas propiedades deseadas de dos canciones o pistas musicales existentes.
@@ -78,7 +78,7 @@ Aplicar técnicas de inteligencia artificial, como algoritmos genéticos y redes
 4. Implementación general del algoritmo genético [1 día]
 5. Implementación de la/s función/es de aptitud [1 día]
 6. Pruebas y reajustes con distintos parámetros y configuraciones [7 días]
-7. Análisis y evaluación de resultados [3 días]
+7. Análisis y evaluación de resultados [5 días]
 8. Elaboración del informe [7 días]
 9. Elaboración de la presentación [3 días]
 ### CRONOGRAMA ESTIMADO DE ACTIVIDADES
